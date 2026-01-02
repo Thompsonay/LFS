@@ -1,0 +1,28 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# Publish output
+**/publish/
+# Secrets
+appsettings.Development.json
+appsettings.Local.json
+
+# Backup files
+*.bak
+*.tmp
+# Database files
+*.mdf
+*.ldf
+*.sqlite
+*.db
