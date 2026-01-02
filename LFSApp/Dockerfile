@@ -10,13 +10,14 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release -o out
 
-# Expose port
-EXPOSE 5000
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/out ./
+
+# Expose port
+EXPOSE 5000
 
 # Start the app
 ENTRYPOINT ["dotnet", "LFSUiApp.dll"]
