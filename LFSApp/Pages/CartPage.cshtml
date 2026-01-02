@@ -1,0 +1,108 @@
+﻿@page
+@model LFSApp.Pages.CartPageModel
+@{
+    ViewData["Title"]= "Cart Page";
+}
+<div class="cart-container">
+    @* <input hidden value="@Model.Response" id="response"/> *@
+    <h1 class="pb-5">Shopping Cart</h1>
+    <div id="cartItems">
+       
+            @if (Model.Cart == null || !Model.Cart.Any())
+            {
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛒</div>
+                    <h2>Your cart is empty</h2>
+                    <p>Looks like you haven't added anything to your cart yet.</p>
+                    <a asp-page="/Shop" class="btn">Continue Shopping</a>
+                </div>
+            }
+            else
+            {
+                @for (int i = 0; i < Model.Cart.Count; i++)
+                {
+                    var item = Model.Cart[i];
+                    <div class="cart-item pb-5">
+                        <div class="cart-item-image">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Name" style="width:100%;" />
+                            }
+                            else
+                            {
+                                <span style="color: #ccc; font-size: 2rem;">📦</span>
+                            }
+                        </div>
+
+                        <div class="item-details">
+                            <h3>@item.Name</h3>
+                        
+                            <p class="item-price">₦@item.Price.ToString("N0")</p>
+                        </div>
+
+                       <div class="quantity-controls">
+                            <!-- Decrease button -->
+                            <form method="post" style="display: inline;">
+                                <input type="hidden" name="index" value="@i" />
+                                <input type="hidden" name="quantity" value="@(item.Quantity > 1 ? item.Quantity - 1 : 1)" />
+                                <button type="submit" class="quantity-btn" asp-page-handler="UpdateQuantity"
+                                        disabled="@(item.Quantity <= 1)">
+                                    -
+                                </button>
+
+                            </form>
+
+                            <!-- Display -->
+                            <span class="quantity-display">@item.Quantity</span>
+
+                            <!-- Increase button -->
+                            <form method="post" style="display: inline;">
+                                <input type="hidden" name="index" value="@i" />
+                                <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                <button type="submit" class="quantity-btn" asp-page-handler="UpdateQuantity">+</button>
+                            </form>
+                        </div>
+
+
+                        <div class="subtotal">
+                            ₦@item.SubTotal.ToString("N0")
+                        </div>
+
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="index" value="@i" />
+                            <button type="submit" class="btn" asp-page-handler="RemoveItem"
+                                    onclick="return confirm('Are you sure you want to remove this item?')">
+                                🗑 Remove
+                            </button>
+                        </form>
+                    </div>
+                }
+
+                <div class="cart-summary">
+                    <div class="cart-total">
+                    <strong>Total: ₦@Model.CartTotal.ToString("N0")</strong>
+
+                    </div>
+
+                    <div class="cart-actions">
+                        <a asp-page="/CheckoutPage" class="btn">🚀 Proceed to Checkout</a>
+
+                        <a asp-page="/Shop" class="btn btn-secondary">
+                            🛍️ Continue Shopping
+                        </a>
+                        <form method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary" asp-page-handler="ClearCart"
+                                    onclick="return confirm('Are you sure you want to clear your cart?')">
+                                🗑️ Clear Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+      
+    </div>
+      
+    </div>
+
+</div>
+@* <script src="/js/Cart.js"></script> *@

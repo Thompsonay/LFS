@@ -1,0 +1,215 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<!-- Image Slider Section -->
+<section class="slider-container">
+   <div class="cover">
+        <div class="slider">
+            <div class="slide active">
+                <div class="slide-content">
+                    <div class="slide-image">
+                        <img src="~/images/beautiful-black-woman-with-afro-curls-hairstyle-smiling-model-dressed-white-summer-costume-sexy-carefree-female-posing-near-grey-wall-studio-tanned-cheerful-isolated.jpg" alt="New Collection 2025" class="slider-img">
+                        <div class="fashion-showcase">
+                            <div class="showcase-item">👗</div>
+                            <div class="showcase-item">👔</div>
+                            <div class="showcase-item">👜</div>
+                        </div>
+                    </div>
+                    <div class="slide-text">
+                        <h1>New Collection 2025</h1>
+                        <p>Discover the latest trends in premium fashion</p>
+                        <a asp-area="" asp-page="/Shop" class="btn">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="slide-image">
+                        <img src="~/images/fast-fashion-vs-slow-sustainable-fashion.jpg" alt="Women's Collection" class="slider-img">
+                        <div class="fashion-showcase women-focus" style="background:none;">
+                            <div class="showcase-item">👗</div>
+                            <div class="showcase-item">👚</div>
+                            <div class="showcase-item">🧥</div>
+                        </div>
+                    </div>
+                    <div class="slide-text">
+                        <h1>Women's Collection</h1>
+                        <p>Elegant styles for the modern woman</p>
+                        <a asp-area="" asp-page="/Shop" class="btn">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-content">
+                    <div class="slide-image">
+                        <img src="~/images/young-beautiful-smiling-female-trendy-summer-dress-sexy-carefree-woman-posing-near-blue-wall-studio-positive-model-having-fun-cheerful-happy-sunny-day-shadow-from-window.jpg" alt="Men's Collection" class="slider-img">
+                        <div class="fashion-showcase men-focus" style="background:none;">
+                            <div class="showcase-item">👔</div>
+                            <div class="showcase-item">👖</div>
+                            <div class="showcase-item">🧶</div>
+                        </div>
+                    </div>
+                    <div class="slide-text">
+                        <h1>Men's Collection</h1>
+                        <p>Sharp, sophisticated looks for every occasion</p>
+                        <a asp-area="" asp-page="/Shop" class="btn">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+      
+
+
+        </div>
+
+        <!-- Navigation arrows -->
+        <button class="slider-nav prev" onclick="changeSlide(-1)">‹</button>
+        <button class="slider-nav next" onclick="changeSlide(1)">›</button>
+
+        <!-- Dots indicator -->
+        <div class="slider-dots">
+            <span class="dot active" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+
+        </div>
+
+   </div>
+
+    <!-- Categories -->
+    <section class="categories">
+        @* <h2 class="section-title">Shop by Category</h2> *@
+        <div class="category-grid">
+            <a asp-area="" asp-page="/Shop/Index" asp-route-category="women" class="category-card" style="width:1;">
+                <div class="category-image">👗</div>
+                <div class="category-info">
+                    <h3>Women</h3>
+                    <p>Elegant dresses, tops, and more</p>
+                </div>
+            </a>
+            <a asp-area="" asp-page="/Shop/Index" asp-route-category="men" class="category-card">
+                <div class="category-image">👔</div>
+                <div class="category-info">
+                    <h3>Men</h3>
+                    <p>Stylish shirts, pants, and suits</p>
+                </div>
+            </a>
+            <a asp-area="" asp-page="/Shop/Index" asp-route-category="accessories" class="category-card">
+                <div class="category-image">👜</div>
+                <div class="category-info">
+                    <h3>Accessories</h3>
+                    <p>Bags, jewelry, and more</p>
+                </div>
+            </a>
+            <a asp-area="" asp-page="/Shop/Index" asp-route-category="accessories" class="category-card">
+                <div class="category-image">👜</div>
+                <div class="category-info">
+                    <h3>Accessories</h3>
+                    <p>Bags, jewelry, and more</p>
+                </div>
+            </a>
+        </div>
+    </section>
+</section>
+
+
+
+<!-- Featured Products -->
+<section class="products">
+     <h2 class="section-title">Featured Products</h2>
+    <div class="product-grid">
+        @if (Model.Products != null)
+        {
+            @foreach (var product in Model.Products)
+            {
+                <a href="/ViewProduct/@product.Id" class="product-card" style="cursor: pointer;">
+                    <div class="product-image">
+                        @if (product.Images != null && product.Images.Any())
+                        {
+                            <img class="product-image" src="@product.Images.First().ImageUrl" alt="@product.Name" width="100%" />
+                        }
+                        else
+                        {
+                            <img src="/uploads/no-image.png" alt="No image" />
+                        }
+
+                    </div>
+
+                    <div class="product-info">
+                        <h3>@product.Name</h3>
+                        <div class="product-price">₦@product.Price.ToString("N0")</div>
+
+                        <form class="add-to-cart-form" method="post" action="/CartPage?handler=AddToCart">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <input type="hidden" name="name" value="@product.Name" />
+                            <input type="hidden" name="price" value="@product.Price" />
+                            <input type="hidden" name="imageUrl" value="@product.Images?.FirstOrDefault()?.ImageUrl" />
+                            <input type="hidden" name="quantity" value="1" />
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        </form>
+
+                    </div>
+                </a>
+            }
+        }
+    </div>
+</section>
+
+
+
+<!-- Newsletter -->
+<section class="newsletter">
+    <h2>Stay Updated</h2>
+    <p>Subscribe to our newsletter for the latest fashion trends and exclusive offers</p>
+    <form class="newsletter-form" asp-area="" asp-page="/Newsletter/Subscribe" method="post">
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <button type="submit">Subscribe</button>
+    </form>
+</section>
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a asp-area="" asp-page="/Index">Home</a></li>
+                <li><a asp-area="" asp-page="/Shop/Index">Shop</a></li>
+                <li><a asp-area="" asp-page="/About">About</a></li>
+                <li><a asp-area="" asp-page="/Contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Customer Service</h3>
+            <ul>
+                <li><a href="#">Shipping Info</a></li>
+                <li><a href="#">Returns</a></li>
+                <li><a href="#">Size Guide</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Follow Us</h3>
+            <ul>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Pinterest</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Newsletter</h3>
+            <p>Subscribe for exclusive offers and updates</p>
+            <form class="newsletter-form" asp-area="" asp-page="/Newsletter/Subscribe" method="post">
+                <input type="email" name="email" placeholder="Email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 Luxe Fashion. All rights reserved.</p>
+    </div>
+</footer>

@@ -1,0 +1,93 @@
+﻿@page
+@model LFSApp.Pages.ShopModel
+@{
+    ViewData["Title"] = "Shop Page";
+}
+
+<div class="shop-container" >
+    @* <input type="hidden" id="response" value="@TempData["Added"]" /> *@
+    <input hidden value="@Model.Response" id="response" />
+
+
+    <div class="shop-header" style="margin-top:70px;">
+        <h1>Shop</h1>
+
+        <div class="shop-filters">
+            <form method="get">
+                <select name="SelectedCategory" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    @foreach (var item in Model.Categories)
+                    {
+                        <option value="@item.CategoryName" selected="@(item.CategoryName == Model.SelectedCategory)">
+                            @item.CategoryName
+                        </option>
+                    }
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="product-grid">   
+        @foreach (var product in Model.Products)
+        {
+            <a href="/ViewProduct/@product.Id" class="product-card" style="cursor: pointer;">
+                <div class="product-image">
+                    @if (product.Images != null && product.Images.Any())
+                    {
+                        <img class="product-image" src="@product.Images.First().ImageUrl" alt="@product.Name" width="100%" />
+                    }
+                    else
+                    {
+                        <img src="/uploads/no-image.png" alt="No image" />
+                    }
+                  
+                </div>
+         
+                <div class="product-info">
+                    <h3>@product.Name</h3>
+                    <div class="product-price">₦@product.Price.ToString("N0")</div>
+
+                    <form  method="post" asp-page="/CartPage" asp-page-handler="AddToCart">
+                        <input type="hidden" name="productId" value="@product.Id" />
+                        <input type="hidden" name="name" value="@product.Name" />
+                        <input type="hidden" name="price" value="@product.Price" />
+                        <input type="hidden" name="imageUrl" value="@product.Images?.FirstOrDefault()?.ImageUrl" />
+                        <input type="hidden" name="quantity" value="1" />
+
+                        <input type="hidden" name="source" value="shop" />
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+
+                </div>
+            </a>
+           
+          
+        }
+
+
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                <p>No products found matching your criteria.</p>
+            </div>
+    </div>
+</div>
+@* <script src="/js/Cart.js"></script>  *@
+
+
+<script>
+       document.addEventListener("DOMContentLoaded", function () {
+        let msg = '@Html.Raw(TempData["CartMessage"] ?? "")';
+
+        if (msg && msg.trim() !== "") {
+            Toastify({
+                text: msg,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                style: {
+                    background: "linear-gradient(45deg, , yellow)"
+                }
+            }).showToast();
+        }
+    });
+</script>

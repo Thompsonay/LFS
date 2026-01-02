@@ -1,0 +1,180 @@
+﻿@using System.Linq
+@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var path = Context.Request.Path.Value?.ToLower();
+    var adminPaths = new[] { "/admindash", "/adminproduct", "/productitem"  }; 
+
+    var isAdmin = adminPaths.Any(p => path.Contains(p));
+    var hideHeader = path == "/authpage"  || isAdmin;
+
+}
+
+
+@{
+    var cartJson = HttpContextAccessor.HttpContext.Session.GetString("CartItems");
+    var count = 0;
+    if (!string.IsNullOrEmpty(cartJson))
+    {
+        var cartItems = JsonConvert.DeserializeObject<List<LFSApp.Model.Cart>>(cartJson);
+        count = cartItems?.Sum(c => c.Quantity) ?? 0;
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LFSApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> 
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/LFSApp.styles.css" asp-append-version="true" />
+    <link href="~/css/Auth.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+
+</head>
+<body>
+    @if(isAdmin)
+    {
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay" ></div>
+        
+        
+        
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>LFS</h3>
+                <div class="subtitle">Fashion Admin</div>
+            </div>
+            <ul class="nav-links">
+                <li>
+
+                    <a class="nav-link @(path.Contains("/admindash") ? "active" : "")" asp-page="/Admindash">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link" asp-page="/Admindash">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(path.Contains("/adminproductitem") ? "active" : "")" asp-page="/ProductItem">
+                        <i class="fas fa-box"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(path.Contains("/adminproductitem") ? "active" : "")" asp-page="/AdminProduct">
+                        <i class="fas fa-tags"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" asp-page="/Admindash">
+                        <i class="fas fa-users"></i>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a  class="nav-link" asp-page="/Admindash">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+       
+    }
+
+  @if(!hideHeader)
+    {
+        <header class="fixed-top">
+            <nav class="navbar navbar-expand-lg bg-white shadow-sm px-3">
+                <div class="container d-flex justify-content-between align-items-center">
+
+                    <!-- Logo -->
+                    <a class="navbar-brand logo" asp-page="/Index" >LARMYFASHION</a>
+
+                    <!-- Hamburger Toggle -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMobile"
+                            aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span> <!-- ✅ This draws the hamburger icon -->
+                    </button>
+
+
+                    <!-- Collapsible Nav Items -->
+                    <div class="collapse navbar-collapse" id="navbarMobile">
+                        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Shop">Shop</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/About">About</a>
+                            </li>
+
+                        </ul>
+                        <!-- Cart icon -->
+                        <a asp-page="/CartPage" class="cart-icon">
+                            Cart <span id="cartCount" class="cart-count">@count</span>
+                        </a>
+                    </div>
+
+
+                </div>
+            </nav>
+        </header>
+
+    }
+
+
+    @* @if (TempData["ToastMessage"] != null)
+    {
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div class="toast align-items-center text-bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @TempData["ToastMessage"]
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+    } *@
+
+
+
+
+    <div class="container-fluid m-0  ">
+        <main role="main" class="m-0">
+            @RenderBody()
+        </main>
+    </div>
+
+
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script> 
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script> 
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/Auth.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

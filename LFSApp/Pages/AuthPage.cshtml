@@ -1,0 +1,104 @@
+﻿@page
+@model LFSApp.Pages.AuthPageModel
+@{
+    ViewData["Title"] = "Auth Page";
+}
+<div class="auth-container">
+    <div class="brand-side">
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <h1 class="brand-logo">LARMYFASHION</h1>
+        <p class="brand-tagline">Where Fashion Meets Excellence<br>Discover Your Style Today</p>
+    </div>
+
+    <div class="form-side">
+        <div class="form-container">
+            <div class="form-toggle">
+                <button type="button" class="toggle-btn active" onclick="showLogin()">Sign In</button>
+                <button type="button" class="toggle-btn" onclick="showSignup()">Sign Up</button>
+                <div class="toggle-slider" id="toggleSlider"></div>
+            </div>
+
+            <!-- Login Form -->
+            <!-- <div asp-validation-summary="All" class="text-danger mb-2"></div> -->
+            <form class="form active" id="loginForm" method="post" >
+                <input type="hidden" asp-for="ReturnUrl" />
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">@Model.Message</div>
+                }
+                <h2 class="form-title">Welcome Back</h2>
+
+                <div class="form-group">
+                    <input type="email" class="form-input" asp-for="Login.Email">
+                    <label class="form-label" asp-for="Login.Email" style="color:black;">Email Address <span style="color:red">*</span></label>
+                    <span asp-validation-for="Login.Email" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" class="form-input" asp-for="Login.Password">
+                    <label class="form-label" asp-for="Login.Password" style="color:black;">Password <span style="color:red">*</span></label>
+                    <span asp-validation-for="Login.Password" class="text-danger small"></span>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" class="checkbox" name="RememberMe" id="rememberMe">
+                    <label for="rememberMe" class="checkbox-label">Remember me</label>
+                </div>
+
+                <button type="submit" class="submit-btn" asp-page-handler="LogIn">Sign In</button>
+
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+     
+                <a href="/Account/ForgotPassword" class="forgot-password" style="color:black;">Forgot your password?</a>
+            </form>
+
+            <!-- Signup Form -->
+            <!-- <div asp-validation-summary="All" class="text-danger mb-2"></div> -->
+            <form class="form" id="signupForm" method="post" >
+                <input type="hidden" asp-for="ReturnUrl" />
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">@Model.Message</div>
+                }
+                <h2 class="form-title">Create Account</h2>
+
+                <div class="form-group">
+                    <input type="text" asp-for="Users.Firstname" class="form-input" >
+                    <label class="form-label" asp-for="Users.Firstname" style="color:black;">First Name <span style="color:red">*</span></label>
+                    <span asp-validation-for="Users.Firstname" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" asp-for="Users.Lastname" class="form-input" >
+                    <label class="form-label" asp-for="Users.Lastname" style="color:black;">Last Name <span style="color:red">*</span></label>
+                    <span asp-validation-for="Users.Lastname" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" asp-for="Users.Email" class="form-input" >
+                    <label class="form-label" asp-for="Users.Email" style="color:black;">Email Address <span style="color:red">*</span></label>
+                    <span asp-validation-for="Users.Email" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" asp-for="Users.Password" class="form-input" >
+                    <label class="form-label" asp-for="Users.Password" style="color:black;">Password <span style="color:red">*</span></label>
+                    <span asp-validation-for="Users.Password" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Account</button>
+
+              
+
+              
+            </form>
+        </div>
+    </div>
+</div>

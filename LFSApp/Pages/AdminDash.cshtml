@@ -1,0 +1,154 @@
+﻿@page
+@model LFSApp.Pages.AdminDashModel
+@{
+    ViewData["Title"] = "AdminDash Page ";
+}
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-expanded="false" aria-controls="sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="user-info">
+            <span>Welcome, Olamide</span>
+            <div class="user-avatar">A</div>
+            <button class="btn btn-outline-dark btn-sm">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+    
+
+    <!-- Content Area -->
+    <div class="content-area">
+        <!-- Dashboard Overview -->
+        <div class="page-section active" id="dashboard">
+            <h2 class="mb-4">Dashboard Overview</h2>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3>$45,230</h3>
+                    <p>Total Sales</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h3>127</h3>
+                    <p>Orders Today</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>2,847</h3>
+                    <p>Total Customers</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>18.2%</h3>
+                    <p>Growth Rate</p>
+                </div>
+            </div>
+
+            <!-- Revenue Chart -->
+            <div class="chart-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4>Revenue Overview</h4>
+                    <div class="btn-group" role="group" id="periodButtons">
+                        <button id="btnDaily" type="button" class="btn btn-outline-secondary btn-sm active" onclick="updateChart('daily')">Daily</button>
+                        <button id="btnWeekly" type="button" class="btn btn-outline-secondary btn-sm" onclick="updateChart('weekly')">Weekly</button>
+                        <button id="btnMonthly" type="button" class="btn btn-outline-secondary btn-sm" onclick="updateChart('monthly')">Monthly</button>
+                    </div>
+                </div>
+                <canvas id="revenueChart" height="3"></canvas><!-- Last 5 Orders -->
+            <div id="lastOrdersSection" class="last-orders mt-4">
+                <h5>Latest Orders</h5>
+                <div class="orders-list">
+                    @if (Model.RecentOrders == null || !Model.RecentOrders.Any())
+                    {
+                        <p class="text-muted">No recent orders.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>Customer</th>
+                                    <th>Delivery Location</th>
+                                    <th>Size</th>
+                                    <th>Address</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var o in Model.RecentOrders)
+                                {
+                                    <tr>
+                                        <td data-label="Reference">@o.Reference</td>
+                                        <td data-label="Customer">@o.FullName</td>
+                                        <td data-label="Delivery">@o.Delivery</td>
+                                        <td data-label="Size">@o.Size</td>
+                                        <td data-label="Address" class="address-cell" title="@o.Delivery">@o.Delivery</td>
+                                        <td data-label="Amount">₦@o.Amount.ToString("N0")</td>
+                                        <td data-label="Status">@(o.IsPaid ? "Paid" : "Pending")</td>
+                                        <td data-label="Date">@o.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            </div>
+
+            
+
+            <script>
+                // updateChart controls which period is shown. When daily is selected, show the last orders table.
+                function updateChart(period) {
+                    // Toggle active class on buttons
+                    var btnDaily = document.getElementById('btnDaily');
+                    var btnWeekly = document.getElementById('btnWeekly');
+                    var btnMonthly = document.getElementById('btnMonthly');
+
+                    btnDaily.classList.remove('active');
+                    btnWeekly.classList.remove('active');
+                    btnMonthly.classList.remove('active');
+
+                    if (period === 'daily') btnDaily.classList.add('active');
+                    if (period === 'weekly') btnWeekly.classList.add('active');
+                    if (period === 'monthly') btnMonthly.classList.add('active');
+
+                    // Show last orders only for daily
+                    var lastOrders = document.getElementById('lastOrdersSection');
+                    if (!lastOrders) return;
+
+                    if (period === 'daily') {
+                        lastOrders.style.display = '';
+                    } else {
+                        lastOrders.style.display = 'none';
+                    }
+
+                    // You can hook into chart refresh logic here if needed
+                }
+
+                // Ensure correct default state on load (daily -> show list)
+                document.addEventListener('DOMContentLoaded', function() {
+                    updateChart('daily');
+                });
+            </script>
+
+           
+        </div>
+
+        
+    </div>
+</div>
+
+

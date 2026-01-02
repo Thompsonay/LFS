@@ -1,0 +1,18 @@
+
+> c@1.0.0 dev
+> concurrently "dotnet watch run" "tailwindcss -i ./wwwroot/css/output.css -o ./wwwroot/css/site.css --watch"
+
+[0] dotnet watch 🔥 Hot reload enabled. For a list of supported edits, see https://aka.ms/dotnet/hot-reload.
+[0]   💡 Press "Ctrl + R" to restart.
+[1] [3m[1m[34m≈[39m[22m[23m tailwindcss [34mv4.1.11[39m
+[1] 
+[1] Done in [32m579µs[39m
+[1] Done in [34m294ms[39m
+[0] dotnet watch ⌚ Building C:\Users\HP\source\repos\LFSUiApp\LFSApp\LFSApp.csproj ...
+[1] Done in [32m632µs[39m
+[1] Done in [32m501µs[39m
+[1] Done in [32m5ms[39m
+[1] Done in [32m6ms[39m
+[1] Done in [32m812µs[39m
+[1] tailwindcss -i ./wwwroot/css/output.css -o ./wwwroot/css/site.css --watch exited with code 3221225786
+[0] dotnet watch run exited with code 3221225786

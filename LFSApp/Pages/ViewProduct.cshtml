@@ -1,0 +1,179 @@
+﻿@page "{id:int}"
+@model LFSApp.Pages.ViewProductModel
+@{
+    ViewData["Title"] = "View Product";
+}
+
+@if (Model.Product != null)
+{
+    <div class="container mt-5">
+        <div class="row align-items-center">
+            <!-- Image Preview Section -->
+            <div class="container my-4 pt-5">
+                <div class="row">
+                    <!-- LEFT SIDE (Main Image + Thumbnails) -->
+                    <div class="col-md-6 text-center">
+                        <!-- Main Image -->
+                        <div class="mb-3">
+                            <img id="mainProductImage"
+                                 src="@(Model.Product.Images != null && Model.Product.Images.Any()
+                                                              ? Model.Product.Images.First().ImageUrl
+                                                              : "/uploads/no-image.png")"
+                             class="img-fluid rounded shadow"
+                             alt="@Model.Product.Name"
+                             style="width:70%;">
+                    </div>
+
+                        <!-- Thumbnails -->
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        @if (Model.Product.Images != null && Model.Product.Images.Any())
+                            {
+                                foreach (var img in Model.Product.Images)
+                                {
+                                    <img src="@img.ImageUrl" alt="Thumbnail"
+                                         class="img-thumbnail"
+                                         style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                         onclick="changeMainImage('@img.ImageUrl')" />
+                                }
+                            }
+                            else
+                            {
+                                <img src="/uploads/no-image.png" alt="No image"
+                                     class="img-thumbnail"
+                                     style="width: 80px; height: 80px;" />
+                            }
+                        </div>
+                    </div>
+
+                    <!-- RIGHT SIDE (Product Details) -->
+                    <div class="col-md-6 d-flex flex-column justify-content-center">
+                        <h2 class="mb-2">@Model.Product.Name</h2>
+                        <p class="text-muted mb-2 fs-4">₦@Model.Product.Price.ToString("N0")</p>
+                        <p class="mb-3">@Model.Product.Description</p>
+
+                        <!-- Quantity Selector -->
+                        <div class="counts mb-3">
+                            <button id="minus" class="counts_btns">-</button>
+                            <input type="number" name="productCount" min="1" step="1" max="999"
+                                   class="product_count" id="productCount" value="1">
+                            <button id="plus" class="counts_btns">+</button>
+                        </div>
+
+                        <!-- Add to Cart + Back -->
+                        <div style="display:flex;">
+                            <form method="post" asp-page="/CartPage" asp-page-handler="AddToCart">
+                                <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                <input type="hidden" name="name" value="@Model.Product.Name" />
+                                <input type="hidden" name="price" value="@Model.Product.Price" />
+                                <input type="hidden" name="imageUrl" value="@Model.Product.Images?.FirstOrDefault()?.ImageUrl" />
+                                <input type="hidden" id="hiddenQuantity" name="quantity" value="1" />
+
+                                <input type="hidden" name="source" value="viewproduct" />
+                                <button type="submit" class="btn btn-primary"> Add to Cart</button>
+                            </form>
+
+                            <a href="/Shop" class="btn btn-outline-secondary ms-2">Back to Shop</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        
+
+
+          
+           
+        </div>
+    </div>
+
+}
+else
+{
+    <div style="text-align: center; padding: 4rem;">
+        <h1>Product Not Found</h1>
+        <p>The product you're looking for doesn't exist.</p>
+        <a asp-area="" asp-page="/Shop/Index" class="btn">Back to Shop</a>
+    </div>
+}
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a asp-area="" asp-page="/Index">Home</a></li>
+                <li><a asp-area="" asp-page="/Shop/Index">Shop</a></li>
+                <li><a asp-area="" asp-page="/About">About</a></li>
+                <li><a asp-area="" asp-page="/Contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Customer Service</h3>
+            <ul>
+                <li><a href="#">Shipping Info</a></li>
+                <li><a href="#">Returns</a></li>
+                <li><a href="#">Size Guide</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Follow Us</h3>
+            <ul>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Pinterest</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Newsletter</h3>
+            <p>Subscribe for exclusive offers and updates</p>
+            <form class="newsletter-form" asp-area="" asp-page="/Newsletter/Subscribe" method="post">
+                <input type="email" name="email" placeholder="Email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 Luxe Fashion. All rights reserved.</p>
+    </div>
+</footer>
+
+
+@section Scripts {
+    <script>
+              function changeMainImage(newSrc) {
+            document.getElementById('mainImage').src = newSrc;
+        }
+        const countInput = document.getElementById("productCount");
+        const hiddenQuantity = document.getElementById("hiddenQuantity");
+        const minusBtn = document.getElementById("minus");
+        const plusBtn = document.getElementById("plus");
+
+        countInput.addEventListener("input", () => {
+            hiddenQuantity.value = countInput.value;
+        });
+
+        // Optional: Quantity + / - buttons
+              minusBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            let value = parseInt(countInput.value) || 1;
+            if (value > 1) {
+                countInput.value = value - 1;
+                hiddenQuantity.value = countInput.value;
+            }
+        });
+
+        plusBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            let value = parseInt(countInput.value) || 1;
+            countInput.value = value + 1;
+            hiddenQuantity.value = countInput.value;
+        });
+
+        function changeMainImage(imageUrl) {
+            document.getElementById("mainProductImage").src = imageUrl;
+        }
+    
+    </script>
+
+}

@@ -1,0 +1,75 @@
+﻿@page
+@model LFSApp.Pages.CheckoutPageModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class=" container "style="max-width:50%; margin-top:100px;">
+    <h1>Checkout</h1>
+    <form class="form-card"  method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Order.FullName">Full Name:</label>
+            <input asp-for="Order.FullName" class="form-control" required>
+            <span asp-validation-for="Order.FullName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Order.Email">Email:</label>
+            <input asp-for="Order.Email" type="email" class="form-control" required>
+            <span asp-validation-for="Order.Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Order.Phone">Phone Number:</label>
+            <input asp-for="Order.Phone" type="tel" class="form-control" required>
+            <span asp-validation-for="Order.Phone" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Order.Address">Address:</label>
+            <input asp-for="Order.Address" class="form-control" required>
+            <span asp-validation-for="Order.Address" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Order.Size">Size:</label>
+            <input asp-for="Order.Size" class="form-control" required>
+            <span asp-validation-for="Order.Size" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Order.Delivery">Delivery Location:</label>
+            <input asp-for="Order.Delivery" class="form-control" required>
+            <span asp-validation-for="Order.Delivery" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Order.PaymentMethod">Payment Method:</label>
+            <select asp-for="Order.PaymentMethod" class="form-control" required>
+                <option value="">Select Payment Method</option>
+                <option value="credit">Credit Card</option>
+                <option value="debit">Debit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="bank_transfer">Bank Transfer</option>
+            </select>
+            <span asp-validation-for="Order.PaymentMethod" class="text-danger"></span>
+        </div>
+
+         <p>Total Amount: @Model.Total NGN</p>
+
+        <input asp-for="Order.Amount" type="hidden" />
+        <div id="formErrors" class="text-danger small"></div>
+
+
+        <input type="hidden" id="cartDataInput" name="CartData" />
+        <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">Place Order</button>
+    </form>
+</div>
+@if (Model.RedirectUrl != null)
+{
+    <script>
+        // Redirect user to Paystack payment page
+        window.location.href = '@Model.RedirectUrl';
+    </script>
+}

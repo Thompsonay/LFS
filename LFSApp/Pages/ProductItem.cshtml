@@ -1,0 +1,122 @@
+﻿@page
+@model LFSApp.Pages.ProductItemModel
+@{
+    ViewData["Title"] = "AdminProduct Page ";
+}
+
+<div class="main-content" id="mainContent">
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-expanded="false" aria-controls="sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="user-info">
+            <span>Welcome, Olamide</span>
+            <div class="user-avatar">A</div>
+            <button class="btn btn-outline-dark btn-sm">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+        <!-- Dashboard Overview -->
+        <div class="container mt-5">
+            <h2 class="mb-4">Add New Product</h2>
+
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label asp-for="ProductVm.Name" class="form-label">Title</label>
+                    <input asp-for="ProductVm.Name" class="form-control" placeholder="Product Name" />
+                    <span asp-validation-for="ProductVm.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ProductVm.Price" class="form-label">Price</label>
+                    <input asp-for="ProductVm.Price" type="number" step="0.01" class="form-control" placeholder="Product Price (e.g. 5000)" />
+                    <span asp-validation-for="ProductVm.Price" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ProductVm.CategoryId" class="form-label">Category</label>
+                    <select asp-for="ProductVm.CategoryId" class="form-select">
+                        <option selected disabled>Choose a Category</option>
+                        @foreach (var report in Model.Categories)
+                        {
+                            <option value="@report.Id">@report.CategoryName</option>
+                        }
+                    </select>
+                    @* <span asp-validation-for="GetProduct.Category" class="text-danger"></span> *@
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Product Image</label>
+                    <input name="ProductImages" type="file" class="form-control" accept="image/*" placeholder="Product Image" multiple />
+                   
+                </div>
+
+                 <div class="mb-3">
+                    <label asp-for="ProductVm.Description" class="form-label">Description</label>
+                    <textarea asp-for="ProductVm.Description" class="form-control" placeholder="Product Description"></textarea>
+                    <span asp-validation-for="ProductVm.Description" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+    </div>
+
+
+    <div class="container py-4">
+        @* <div class="d-flex align-items-center justify-content-between mb-3">
+            <h1 class="h4 mb-0">Products</h1>
+            <div class="input-group" style="max-width: 300px;">
+                <span class="input-group-text">Search</span>
+                <input id="search" type="text" class="form-control" placeholder="name, category..." />
+            </div>
+        </div> *@
+  
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle mb-0 bg-white">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">ID</th>
+    
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Description</th>
+                        <th scope="col" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="product-body">
+                    <!-- Example rows -->
+                    @foreach (var item in Model.GetProduct)
+                    {
+                        <tr>
+                            <th scope="row">@item.Id</th>
+                            <td>@item.Name</td>
+                            <td>@item.Price</td>
+                            <td>@item.Description</td>
+                               
+                            <td class="text-end">
+                                 <button class=" btn-sm btn-primary" asp-page="/ProductItem" asp-route-id="@item.Id">Edit</button>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id"
+                                      onsubmit="return confirm('Are you sure you want to delete this product?');"
+                                      style="display:inline;">
+                                    <button type="submit" class=" btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+ 
+    </div>
+
+
+
+</div>

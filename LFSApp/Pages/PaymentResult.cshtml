@@ -1,0 +1,22 @@
+@page
+@model LFSApp.Pages.PaymentResultModel
+@{
+    ViewData["Title"] = "Payment Result";
+}
+
+<div style="max-width:600px;margin:4rem auto; text-align:center;">
+    <h2>Payment @(@Model.Success ? "Successful" : "Failed")</h2>
+    <p>Reference: <strong>@Model.Reference</strong></p>
+
+    @if (Model.Success)
+    {
+        <p>Thank you — your payment was received and your order will be processed.</p>
+        <a asp-page="/Index" class="btn">Return to Home</a>
+    }
+    else
+    {
+        <p>Something went wrong — your payment wasn't verified.
+        If you were charged, please contact support with your reference.</p>
+        <a asp-page="/CheckoutPage" class="btn">Try again</a>
+    }
+</div>
